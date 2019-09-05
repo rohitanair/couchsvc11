@@ -1,0 +1,82 @@
+spring:
+  sleuth:
+    sampler: {probability: 1}
+  mail: {port: 25, host: localhost}
+  zipkin:
+    base-url: http://localhost:9411
+    locator:
+      discovery: {enabled: true}
+    enabled: false
+  profiles:
+    include: [swagger]
+    active: dev
+  main: {allow-bean-definition-overriding: true}
+  thymeleaf: {cache: false}
+  cloud:
+    stream:
+      kafka:
+        streams:
+          binder:
+            brokers: localhost
+            configuration:
+              default:
+                value: {serde: org.apache.kafka.common.serialization.Serdes$StringSerde}
+                key: {serde: org.apache.kafka.common.serialization.Serdes$StringSerde}
+              commit:
+                interval: {ms: 1000}
+            zkNodes: localhost
+        binder: {brokers: localhost, zkNodes: localhost}
+      bindings:
+        binding2: {destination: couchsvc11-source}
+        singleOutput: {destination: couchsvc11-destination}
+  jackson:
+    serialization: {indent-output: true}
+  application: {name: couchsvc11}
+  couchbase:
+    bucket: {password: couchbase, name: default}
+    bootstrap-hosts: couchbase-example.smartfan-dev
+  kafka:
+    producer: {bootstrap-servers: 'http://localhost:9092', value-serializer: org.apache.kafka.common.serialization.StringSerializer,
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer}
+    consumer: {value-deserializer: org.apache.kafka.common.serialization.StringDeserializer,
+      group-id: group_id, auto-offset-reset: earliest, bootstrap-servers: 'http://localhost:9092',
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer}
+  messages: {cache-duration: PT1S}
+  jpa:
+    properties: {hibernate.cache.hazelcast.instance_name: couchsvc11}
+  devtools:
+    livereload: {enabled: false}
+    restart: {enabled: true}
+  connect: {url: 'http://localhost/connectors'}
+server: {port: 8080}
+jhipster:
+  cache:
+    hazelcast:
+      management-center: {update-interval: 3, enabled: false, url: 'http://localhost:8180/mancenter'}
+      time-to-live-seconds: 3600
+      backup-count: 1
+  security:
+    authentication:
+      jwt: {base64-secret: ZWY0MDZkN2UzMjY2M2MxMjg1ZmM5ZTA5OTg3NmE5OGRlNmIxZThmZjdlZGE5YjFhMDJkYmZlNzhmNzE3NTllMTU0MjBjNmFhYzVhMDU5ZjgxMTQ5NGNjYTQzY2QwNDM5OWY5ZTFlNTk1MDQxMDgxYzhkNTJiZGYzNDk4MjI2Y2U=,
+        token-validity-in-seconds: 86400, token-validity-in-seconds-for-remember-me: 2592000}
+  mail: {base-url: 'http://127.0.0.1:8080', from: couchsvc11@localhost}
+  clientApp: {name: couchsvc11}
+  logging:
+    logstash: {port: 5000, queue-size: 512, host: localhost, enabled: false}
+    use-json-format: false
+  metrics:
+    logs: {report-frequency: 60, enabled: false}
+opentracing:
+  spring:
+    cloud:
+      websocket: {enabled: false}
+management:
+  endpoint:
+    jhi-metrics: {enabled: true}
+    health: {show-details: when-authorized}
+    prometheus: {enabled: true}
+  endpoints:
+    web:
+      exposure: {include: 'configprops,env,health,info,threaddump,logfile,jhi-metrics,prometheus'}
+logging:
+  level: {ROOT: DEBUG, com.infy.tele: DEBUG, io.github.jhipster: DEBUG}
